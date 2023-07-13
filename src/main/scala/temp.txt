@@ -1,0 +1,5 @@
+T14,Gross domestic product and gross domestic product per capita,,,,,
+Region/Country/Area,,Year,Series,Value,Footnotes,Source
+2,Africa,1995,GDP in current prices (millions of US dollars),"588,279",,"United Nations Statistics Division, New York, National Accounts Statistics: Analysis of Main Aggregates (AMA) database, last accessed March 2022."
+15,Northern Africa,2020,GDP in constant 2010 prices (millions of US dollars),"834,346",,"United Nations Statistics Division, New York, National Accounts Statistics: Analysis of Main Aggregates (AMA) database, last accessed March 2022."
+202,Sub-Saharan Africa,2005,GDP per capita (US dollars),"1,050",,"United Nations Statistics Division, New York, National Accounts Statistics: Analysis of Main Aggregates (AMA) database, last accessed March 2022."
