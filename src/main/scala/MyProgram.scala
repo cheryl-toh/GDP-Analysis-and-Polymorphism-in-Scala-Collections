@@ -25,7 +25,13 @@ object MyProgram{
     val data = reader.readAll().asScala.drop(841).flatMap { line =>
       val country = line(1).replaceAll("\"", "")
       val year = line(2).toInt
-      val gdpPerCapital = line(4).replaceAll("\"", "").replaceAll(",", "").toDouble
+      val gdpValue = line(4).replaceAll("\"", "").replaceAll(",", "")
+      val gdpPerCapital = line(3) match {
+        case "GDP per capita (US dollars)" => gdpValue.toDouble / 1_000_000
+        case "GDP in constant 2010 prices (millions of US dollars)" => gdpValue.replaceAll("\"", "").toDouble
+        case "GDP real rates of growth (percent)" => 0.0 // or any default value for growth rates
+        case _ => 0.0 // default value for any other types of input
+      }
 
       if (country.nonEmpty)
         Some(CountryGDP(country, year, gdpPerCapital))
@@ -39,28 +45,37 @@ object MyProgram{
   }
 
 
+  //Function to calculate average gdp per capital for a country of type A
+  private def calculateAverageGDPPerCapital[A](data: mutable.Buffer[A])(gdpPerCapitalSelector: A => Double): Double = {
+    val totalGDPOfCountryA = data.map(gdpPerCapitalSelector).sum
+    val averageGDP = totalGDPOfCountryA / data.length
+
+    averageGDP
+  }
+
+
   /*
   Task 1:
   Finding the country with the highest GDP per capital
   */
-  
+
   // Function to filter the data and keep only the latest year for each country
   private def filterLatestYearData(data: mutable.Buffer[CountryGDP]): mutable.Buffer[CountryGDP] = {
 
-    //get latest year of each country
-    val latestYearData = data.groupBy((countryGDP: CountryGDP) => getCountry(countryGDP))
-      .view.mapValues((groupedData: mutable.Buffer[CountryGDP]) => groupedData.maxBy(_.year))
+    //select countries' highest gdp per capital value for latest year input
+    val latestYearData = data.groupBy(countryGDP => (countryGDP.country, countryGDP.year))
+      .view.mapValues(groupedData => groupedData.maxBy(_.gdpPerCapital))
 
-    //return CountryGDP objects with each country one input of their latest year
+    //return Buffer list
     latestYearData.values.toBuffer
   }
 
   // Function to find the maximum element in a collection based on a given property
   private def findMaxBy[A, B](data: mutable.Buffer[A])(property: A => B)(implicit ord: Ordering[B]): A = {
-    
-    //find CountryGDP object with highest GDP per capital
     data.maxBy(property)
   }
+
+
 
 
   /*
@@ -68,11 +83,33 @@ object MyProgram{
   Finding the average GDP per capital(US dollars) for Malaysia in the provided data
   */
 
+  private def filterMalaysia(data: mutable.Buffer[CountryGDP]): mutable.Buffer[CountryGDP] = {
+
+    val malaysiaRecords = data.filter((countryGDP: CountryGDP) => getCountry(countryGDP) == "Malaysia")
+
+    malaysiaRecords
+  }
+
+
 
   /*
   Task 3:
   Finding the five countries with the lowest average GDP per capital(US dollars) in the provided data
   */
+
+  //Function to find lowest average GDP countries
+  private def findLowestAverageGDPCountries(data: mutable.Buffer[CountryGDP], n: Int): List[(String, Double)] = {
+
+    //group countries by name and calculate its average gdp per capital
+    val averageGDPCountries = data.groupBy((countryGDP: CountryGDP) => getCountry(countryGDP))
+      .view.mapValues((groupedData: mutable.Buffer[CountryGDP]) => calculateAverageGDPPerCapital(groupedData)(_.gdpPerCapital))
+    //append n number of countries with lowest average gdp into a list
+    val lowestAverageGDPCountries = averageGDPCountries.toList.sortBy(_._2).take(n)
+
+    //return list
+    lowestAverageGDPCountries
+  }
+
 
 
   //main function to run main code (implementation)
@@ -92,6 +129,17 @@ object MyProgram{
     println("\n========================================")
     println("COUNTRY WITH THE HIGHEST GDP PER CAPITAL")
     println("========================================")
-    println(s"Country: ${countryWithHighestGDPPerCapital.country}\nYear: ${countryWithHighestGDPPerCapital.year}\nGDP per capital: ${countryWithHighestGDPPerCapital.gdpPerCapital.formatted("%.2f")} US Dollars")
+    println(s"Country: ${countryWithHighestGDPPerCapital.country}\nYear: ${countryWithHighestGDPPerCapital.year}\nGDP per capital: ${"%.2f".format(countryWithHighestGDPPerCapital.gdpPerCapital)} Millions of US Dollars")
+
+
+    //Task 3
+    val lowestAverageGDP = findLowestAverageGDPCountries(data, 5)
+
+    println("\n\n======================================================")
+    println("FIVE COUNTRIES WITH THE LOWEST AVERAGE GDP PER CAPITAL")
+    println("======================================================")
+    lowestAverageGDP.foreach { case (country, avgGDP) =>
+      println(s"$country (${"%.2f".format(avgGDP)} Millions of US Dollars)")
+    }
   }
 }
