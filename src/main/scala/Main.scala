@@ -17,7 +17,7 @@ object Main{
     val reader = new CSVReader(Source.fromResource(filename).reader())
 
     //read each line of data and add into mutable buffer
-    val data = reader.readAll().asScala.drop(2).flatMap { line =>
+    val data = reader.readAll().asScala.drop(841).flatMap { line =>
       val country = line(1).replaceAll("\"", "")
       val year = line(2).toInt
       val gdpPerCapital = line(4).replaceAll("\"", "").replaceAll(",", "").toDouble
