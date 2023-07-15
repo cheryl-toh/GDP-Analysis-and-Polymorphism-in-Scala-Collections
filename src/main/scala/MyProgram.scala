@@ -25,16 +25,11 @@ object MyProgram{
     val data = reader.readAll().asScala.drop(841).flatMap { line =>
       val country = line(1).replaceAll("\"", "")
       val year = line(2).toInt
-      val gdpValue = line(4).replaceAll("\"", "").replaceAll(",", "")
-      val gdpPerCapital = line(3) match {
-        case "GDP per capita (US dollars)" => gdpValue.toDouble / 1_000_000
-        case "GDP in constant 2010 prices (millions of US dollars)" => gdpValue.replaceAll("\"", "").toDouble
-        case "GDP real rates of growth (percent)" => 0.0 // or any default value for growth rates
-        case _ => 0.0 // default value for any other types of input
-      }
+      val gdpValue = line(4).replaceAll("\"", "").replaceAll(",", "").toDouble
+      val series = line(3).replaceAll("\"", "")
 
-      if (country.nonEmpty)
-        Some(CountryGDP(country, year, gdpPerCapital))
+      if (country.nonEmpty && series.equalsIgnoreCase("GDP per capita (US dollars)"))
+        Some(CountryGDP(country, year, gdpValue))
       else
         None
     }
@@ -135,7 +130,7 @@ object MyProgram{
     println("\n========================================")
     println("COUNTRY WITH THE HIGHEST GDP PER CAPITAL")
     println("========================================")
-    println(s"Country: ${countryWithHighestGDPPerCapital.country}\nYear: ${countryWithHighestGDPPerCapital.year}\nGDP per capital: ${"%.2f".format(countryWithHighestGDPPerCapital.gdpPerCapital)} Millions of US Dollars")
+    println(s"Country: ${countryWithHighestGDPPerCapital.country}\nYear: ${countryWithHighestGDPPerCapital.year}\nGDP per capital: ${"%.2f".format(countryWithHighestGDPPerCapital.gdpPerCapital)} US Dollars")
 
     //Task 2
 
@@ -146,7 +141,7 @@ object MyProgram{
     println("AVERAGE GDP PER CAPITAL OF MALAYSIA")
     println("========================================")
 
-    println(s"Country: Malaysia \nAverage GDP per capital: ${"%.2f".format(malaysiaAverageGDP)} Millions of US Dollars")
+    println(s"Country: Malaysia \nAverage GDP per capital: ${"%.2f".format(malaysiaAverageGDP)} US Dollars")
 
     //Task 3
     val lowestAverageGDP = findLowestAverageGDPCountries(data, 5)
@@ -155,7 +150,7 @@ object MyProgram{
     println("FIVE COUNTRIES WITH THE LOWEST AVERAGE GDP PER CAPITAL")
     println("======================================================")
     lowestAverageGDP.foreach { case (country, avgGDP) =>
-      println(s"$country (${"%.2f".format(avgGDP)} Millions of US Dollars)")
+      println(s"$country (${"%.2f".format(avgGDP)} US Dollars)")
     }
     println()
   }
