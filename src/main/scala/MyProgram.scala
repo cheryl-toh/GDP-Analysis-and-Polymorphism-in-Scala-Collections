@@ -133,7 +133,7 @@ object MyProgram{
 
     //print task 1 outcome
     println("\n========================================")
-    println("COUNTRY WITH THE HIGHEST GDP PER capita")
+    println("COUNTRY WITH THE HIGHEST GDP PER CAPITA")
     println("========================================")
     println(s"Country: ${countryWithHighestGDPPercapita.country}\nYear: ${countryWithHighestGDPPercapita.year}\nGDP per capita: ${"%.2f".format(countryWithHighestGDPPercapita.gdpPerCapita)} US Dollars")
 
@@ -154,7 +154,7 @@ object MyProgram{
 
     //print task 3 outcome
     println("\n======================================================")
-    println("FIVE COUNTRIES WITH THE LOWEST AVERAGE GDP PER capita")
+    println("FIVE COUNTRIES WITH THE LOWEST AVERAGE GDP PER CAPITA")
     println("======================================================")
     lowestAverageGDP.foreach { case (country, avgGDP) =>
       println(s"$country (${"%.2f".format(avgGDP)} US Dollars)")
