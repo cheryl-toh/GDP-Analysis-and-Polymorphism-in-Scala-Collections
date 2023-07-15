@@ -16,9 +16,9 @@ To run the program, you need to have Scala installed on your machine. Here are t
 2. Open a terminal and navigate to the project directory.
 3. Update the path to the dataset file in the Scala program as mentioned above.
 4. Compile the Scala program using the `scalac` command:
-   -scalac MyProgram.scala
+   `scalac MyProgram.scala`
 5. Run the compiled program using the `scala` command:
-   scala MyProgram
+   `scala MyProgram`
 6. The program will display the answers to the questions in the terminal.
 
 ## Questions Answered
