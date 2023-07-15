@@ -83,11 +83,17 @@ object MyProgram{
   Finding the average GDP per capital(US dollars) for Malaysia in the provided data
   */
 
-  private def filterMalaysia(data: mutable.Buffer[CountryGDP]): mutable.Buffer[CountryGDP] = {
+  //Function to find the average value of Malaysia's GDP
+  private def findGDPMalaysia(data: mutable.Buffer[CountryGDP]): Double = {
 
+    //returns a buffer containing countries that are Malaysia
     val malaysiaRecords = data.filter((countryGDP: CountryGDP) => getCountry(countryGDP) == "Malaysia")
 
-    malaysiaRecords
+    //calculates the average GDP of selected country
+    val AverageGDPMalaysia = calculateAverageGDPPerCapital(malaysiaRecords)(_.gdpPerCapital)
+
+    //return average GDP value
+    AverageGDPMalaysia
   }
 
 
@@ -131,15 +137,26 @@ object MyProgram{
     println("========================================")
     println(s"Country: ${countryWithHighestGDPPerCapital.country}\nYear: ${countryWithHighestGDPPerCapital.year}\nGDP per capital: ${"%.2f".format(countryWithHighestGDPPerCapital.gdpPerCapital)} Millions of US Dollars")
 
+    //Task 2
+
+    // Find the average of Malaysia's GDP
+    val malaysiaAverageGDP = findGDPMalaysia(data)
+
+    println("\n========================================")
+    println("AVERAGE GDP PER CAPITAL OF MALAYSIA")
+    println("========================================")
+
+    println(s"Country: Malaysia \nAverage GDP per capital: ${"%.2f".format(malaysiaAverageGDP)} Millions of US Dollars")
 
     //Task 3
     val lowestAverageGDP = findLowestAverageGDPCountries(data, 5)
 
-    println("\n\n======================================================")
+    println("\n======================================================")
     println("FIVE COUNTRIES WITH THE LOWEST AVERAGE GDP PER CAPITAL")
     println("======================================================")
     lowestAverageGDP.foreach { case (country, avgGDP) =>
       println(s"$country (${"%.2f".format(avgGDP)} Millions of US Dollars)")
     }
+    println()
   }
 }

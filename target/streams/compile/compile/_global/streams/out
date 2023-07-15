@@ -1,0 +1,6 @@
+[0m[[0m[31merror[0m] [0m[0m/Users/black/Documents/Coding/School Work/OOP/Assignment2/src/main/scala/MyProgram.scala:92:5: type mismatch;[0m
+[0m[[0m[31merror[0m] [0m[0m found   : Double[0m
+[0m[[0m[31merror[0m] [0m[0m required: scala.collection.mutable.Buffer[MyProgram.CountryGDP][0m
+[0m[[0m[31merror[0m] [0m[0m    AverageGDPMalaysia[0m
+[0m[[0m[31merror[0m] [0m[0m    ^[0m
+[0m[[0m[31merror[0m] [0m[0mone error found[0m
